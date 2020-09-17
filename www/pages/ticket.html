@@ -1,0 +1,119 @@
+<template>
+    <div class="page ticket" data-name="ticket">
+        <div class="navbar color-white">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                    </a>
+                </div>
+                <div class="title">
+					Ticket
+				</div>
+				<div class="right">
+					<a href="#" class="link">
+                        <span class="material-icons">print</span>
+                    </a>
+				</div>
+            </div>
+        </div>
+        <div class="page-content">
+			
+			<div class="total-top">{{ticket.total}}</div>
+			
+			<div class="ttc">TTC</div>
+			
+			<div style="margin-top:10px">
+				<div>
+					<span style="display:block; float:right; font-size:12px;">{{ticket.date}}</span>
+					Operateur : {{ticket.operator}}
+				</div>
+				<div style="margin-top:5px;">
+					{{ticket.number}}
+				</div>
+			</div>
+            
+			<div class="data-table arts"><!-- no-head -->
+				<table>
+					<thead>
+						<tr>
+							<th class="label-cell">Article</th>
+							<th class="numeric-cell">Prix</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#each ticket.articles}}
+						<tr>
+							<td class="label-cell">
+								{{name}}
+								<span>{{quantity}} x {{unitprice}}</span>
+							</td>
+							<td class="numeric-cell">{{totalprice}}</td>
+						</tr>
+						{{/each}}
+					</tbody>
+				</table>
+			</div>
+            
+            <div class="block block-strong" style="font-weight:bold; padding-right:0; margin-top:0; padding-left:0; height:70px; margin-bottom:5px;">
+				<div style="position:absolute; right:0; font-size:22px; margin-top:-5px;">{{ticket.total}}</div>
+                Total
+				<div style="text-align: right;color: #CCC;font-size: 13px;margin-top: 2px;font-weight: normal;letter-spacing: 1px;">XAF</div>
+            </div>
+			
+			<div class="data-table">
+				<table>
+					<thead>
+						<tr>
+							<th class="label-cell" style="height:40px">% TVA</th>
+							<th class="numeric-cell" style="height:40px">Prix HT</th>
+							<th class="numeric-cell" style="height:40px">Mt. TVA</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="label-cell">10.00</td>
+							<td class="numeric-cell">8.91</td>
+							<td class="numeric-cell">0.99</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			
+			<button class="col button clr-custom" style="margin-top:35px; background-color:var(--pos-efflur-color)" ng-click="pay()">Partager</button>
+			
+        </div>
+    </div>
+</template>
+<script>
+    return {
+        data: function () {
+			return {
+				ticket: {
+					operator: "Grace Bissi",
+					number: "#0017-CB Ivan",
+					date: "23/07/2021 12:34",
+					total: "41,90",
+					articles: [{
+						name: "Pagne Wax",
+						quantity: 1,
+						unitprice: "12,00",
+						totalprice: "12,00"
+					}, {
+						name: "Bomber Afro",
+						quantity: 1,
+						unitprice: "12,00",
+						totalprice: "12,00"
+					}, {
+						name: "Chaussures Liputa",
+						quantity: 1,
+						unitprice: "12,00",
+						totalprice: "12,00"
+					}]
+				}
+			}
+        },
+    };
+</script>

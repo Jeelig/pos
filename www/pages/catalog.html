@@ -1,0 +1,143 @@
+<template>
+    <div class="page" data-name="catalog" id="mycatalog">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding color-white">
+				<div class="left">
+					<a href="#" class="link icon-only panel-open">
+						<i class="f7-icons">line_horizontal_3</i>
+					</a>
+				</div>
+                <div class="title">Catalogue</div>
+				<div class="right">
+					<a href="#" class="link icon-only">
+						<i class="material-icons">add</i>
+					</a>
+				</div>
+            </div>
+        </div>
+        <div class="page-content">
+			
+			<a href="/categories/">
+				<div class="fkbtn">
+					CATEGORIES
+				</div>
+			</a>
+			
+			<div class="sisearch" style="border-bottom:solid 1px #dedede87">
+				<div class="f7-icons glass">search</div>
+				<div class="f7-icons ymark" @click="emptysearch()">xmark_circle_fill</div>
+				<input type="search" placeholder="Recherche ..." id="art-search" spellcheck="false" autocomplete="off" autocorrect="off"/>
+			</div>
+			
+			<!--
+            <div class="list links-list" style="margin-top:0;">
+                <ul id="myUL">
+                    {{#each articles}}
+					<li>
+						<a href="/product/{{id}}/" style="padding:0 3px">
+							<div class="item-content">
+								<div class="item-media">
+									
+								</div>
+								<div class="item-inner">
+									<div class="item-title">{{name}}</div>
+									<div class="item-after">{{price}}</div>
+								</div>
+							</div>
+						</a>
+					</li>
+                    {{/each}}
+                </ul>
+            </div>-->
+			
+			<div class="block" style="margin-top:15px;">
+				<div class="row" id="myUL">
+					{{#each articles}}
+					<div class="col-50 MyElem">
+						<a href="/product/{{id}}/">
+							<div>
+								<div style="overflow:hidden;">
+									<img src="{{image.smallx2}}"/>
+								</div>
+								<div style="font-weight:bold; padding:7px 7px 0 7px;">{{name}}</div>
+								<div style="color:#BBB; padding:0 7px;">En stock</div>
+								<div class="vivi">&nbsp;{{price}}&nbsp;</div>
+							</div>
+						</a>
+					</div>
+                    {{/each}}
+				</div>
+			</div>
+
+			<!--
+			<div class="list-catalog">
+				<ul id="myUL">
+					{{#each articles}}
+					<li>
+						<a href="/product/{{id}}/" style="color:#212121">
+							<div>
+								<div><img src="{{image.smallx2}}" style=""/></div>
+								<span style="font-weight:bold;">{{name}}</span>
+							</div>
+						</a>
+					</li>
+                    {{/each}}
+				</ul>
+			</div>-->
+			
+        </div>
+    </div>
+</template>
+<script>
+    return {
+		on: {
+			pageInit: function() {
+				var self = this;
+				$$("#art-search").on('keyup', function (e) {
+					self.filterInput();
+				});
+			},
+			// each object key means same name event handler
+			pageTabShow: function() {
+				this.$setState({
+					articles: global.articles,
+				});
+			}
+		},
+		methods: {
+			getArticles: function() {
+				return global.articles;
+			},
+			emptysearch: function() {
+				document.getElementById("art-search").value = "";
+				this.filterInput();
+			},
+			filterInput: function() {
+				// Declare variables
+				var input, filter, ul, li, a, i, txtValue;
+				input = document.getElementById("art-search");
+				filter = input.value.toUpperCase();
+				ul = document.getElementById("myUL");
+				//li = ul.getElementsByTagName("li");
+				li = ul.getElementsByClassName("MyElem");
+				// Loop through all list items, and hide those who don't match the search query
+				for (i = 0; i < li.length; i++) {
+					a = li[i].getElementsByTagName("a")[0];
+					//a = li[i].getElementsByClassName("MyElem")[0];
+					txtValue = a.textContent || a.innerText;
+					if (txtValue.toUpperCase().indexOf(filter) > -1) {
+						li[i].style.display = "";
+					} else {
+						li[i].style.display = "none";
+					}
+				}
+			}
+		},
+        data: function () {
+            return {
+                articles: []//this.$root.products, //this.getArticles()//global.articles//
+            };
+        },
+    };
+</script>

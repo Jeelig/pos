@@ -1,0 +1,191 @@
+<template>
+    <div class="page page-client" data-name="client">
+        <div class="navbar color-white">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding color-white">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                    </a>
+                </div>
+                <div class="title">{{client.title}}</div>
+				<div class="right">
+					<a href="#" class="link" @click="editclient()">
+						{{#js_if "this.state == 'read'"}}
+						<span class="material-icons">create</span>
+						{{else}}
+						<span class="material-icons">save</span>
+						{{/js_if}}
+					</a>
+				</div>
+            </div>
+        </div>
+        <div class="page-content" style="text-align:center">
+			
+			{{#js_if "this.state == 'read'"}}
+			<div class="prof"><i class="icon f7-icons">person_circle_fill</i></div>
+            <div class="block-title" style="font-size:18px; margin-top:20px; height:22px;">{{client.firstname}} {{client.lastname}}</div>
+			{{else}}
+			<form class="list" id="my-form" style="margin:0">
+				<ul>
+					<li>
+						<div class="item-content item-input">
+							<div class="item-inner">
+								<div class="item-title item-label" style="text-align:left">Prénom</div>
+								<div class="item-input-wrap">
+									<input type="text" name="firstname" placeholder="Prénom du client" value="{{client.firstname}}" spellcheck="false" autocomplete="off" autocorrect="off"/>
+								</div>
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="item-content item-input">
+							<div class="item-inner">
+								<div class="item-title item-label" style="text-align:left">Nom</div>
+								<div class="item-input-wrap">
+									<input type="text" name="lastname" placeholder="Nom du client" value="{{client.lastname}}" spellcheck="false" autocomplete="off" autocorrect="off"/>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</form>
+            {{/js_if}}
+			
+			{{#js_if "this.state == 'edit'"}}
+			<div class="optera">
+				<table>
+					{{#if client.email}} {{else}}
+					<tr @click="addinfo('email')">
+						<td class="iconitem"><span class="material-icons">add_circle</span></td>
+						<td class="itmtext">Ajouter une adresse email</td>
+					</tr>
+					{{/if}}
+					{{#if client.tel}} {{else}}
+					<tr @click="addinfo('phone')">
+						<td class="iconitem"><span class="material-icons">add_circle</span></td>
+						<td class="itmtext">Ajouter un téléphone</td>
+					</tr>
+					{{/if}}
+					{{#if client.adresse}} {{else}}
+					<tr @click="addinfo('adresse')">
+						<td class="iconitem"><span class="material-icons">add_circle</span></td>
+						<td class="itmtext">Ajouter une adresse</td>
+					</tr>
+					{{/if}}
+				</table>
+			</div>
+			{{/js_if}}
+            
+			
+			<div class="list" style="margin-top:30px">
+				<ul>
+					{{#if client.email}}
+					<li>
+						<a href="#" class="item-link item-content">
+							<div class="item-media"><i class="material-icons">mail</i></div>
+							<div class="item-inner">
+								<div class="item-title">
+									<div class="item-header">Email</div>
+									{{client.email}}
+								</div>
+								<div class="item-after">Editer</div>
+							</div>
+						</a>
+					</li>
+					{{/if}}
+					{{#if client.tel}}
+					<li>
+						<a href="#" class="item-link item-content">
+							<div class="item-media"><i class="material-icons">phone</i></div>
+							<div class="item-inner">
+								<div class="item-title">
+									<div class="item-header">Phone</div>
+									{{client.tel}}
+								</div>
+								<div class="item-after">Editer</div>
+							</div>
+						</a>
+					</li>
+					{{/if}}
+					{{#if client.address}}
+					<li>
+						<a href="#" class="item-link item-content">
+							<div class="item-media"><i class="material-icons">location_on</i></div>
+							<div class="item-inner">
+								<div class="item-title">
+									<div class="item-header">Adresse</div>
+									97 rue Charles Infroit, 94400 Vitry-sur-Seine
+								</div>
+								<div class="item-after">Editer</div>
+							</div>
+						</a>
+					</li>
+					{{/if}}
+				</ul>
+			</div>
+			
+			
+			{{#js_if "this.state == 'read'"}}
+			<div style="padding:0 20px;">
+				<button class="col button clr-custom" style="margin-top:35px; background-color:var(--pos-efflur-color);" ng-click="com()">Communiquer</button>
+			</div>
+			{{else}}
+			<div style="padding:0 20px;">
+				<button class="col button clr-custom" style="margin-top:35px; background-color:var(--pos-efflur-color);" @click="cancel()">Annuler</button>
+			</div>
+			{{/js_if}}
+			
+        </div>
+    </div>
+</template>
+<script>
+    return {
+		methods: {
+			editclient: function() {
+				let value = (this.state == "read") ? "edit" : "read";
+				this.$setState({
+					state: value
+				});
+			},
+			addinfo: function(info) {
+				alert(info);
+			},
+			cancel: function() {
+				this.$setState({
+					state: "read"
+				});
+				if (!this.client.firstname || (this.client.firstname.length <= 0)) {
+					ViewClient.router.back();
+				}
+			}
+		},
+        data: function () {
+			var clientId = this.$route.params.id;
+            var currentClient = null;
+			let default_state = "read";
+            this.$root.clients.forEach(function (client) {
+                if (client.id === parseInt(clientId)) {
+                    currentClient = client;
+					currentClient.title = client.firstname + " " + client.lastname;
+                }
+            });
+			if (currentClient == null) {
+				default_state = "edit";
+				currentClient = {
+					id: -1,
+					firstname: "",
+					lastname: "",
+					tel: "",
+					email: "",
+					title: "Nouveau client"
+				}
+			}
+            return {
+                client: currentClient,
+				state: default_state
+            };
+        },
+    };
+</script>

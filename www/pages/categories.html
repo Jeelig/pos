@@ -1,0 +1,39 @@
+<template>
+    <div class="page" data-name="categories">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding color-white">
+				<div class="left">
+					<a href="#" class="link back">
+						<i class="icon icon-back"></i>
+					</a>
+				</div>
+                <div class="title">Catégories</div>
+				<div class="right">
+					<a href="#" class="link icon-only">
+						<i class="material-icons">add</i>
+					</a>
+				</div>
+            </div>
+        </div>
+        <div class="page-content">
+			
+            <div class="list links-list" style="margin-top:0;">
+                <ul>
+                    {{#each products}}
+                    <li><a href="/product/{{id}}/">{{title}}</a></li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    return {
+        data: function () {
+            return {
+                products: this.$root.products,
+            };
+        },
+    };
+</script>

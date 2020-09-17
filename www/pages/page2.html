@@ -1,0 +1,68 @@
+<div class="page page-page2" data-name="validation" ng-controller="ValidationController" ng-init="init()">
+	<div class="navbar color-white">
+		<div class="navbar-bg"></div>
+		<div class="navbar-inner bg-custom">
+			<div class="left">
+				<a href="#" class="link back">
+					<i class="icon icon-back"></i>
+				</a>
+			</div>
+			<div class="title">Validation</div>
+			<div class="right">
+				<a href="#" class="link" style="text-transform:uppercase; font-size:14px; letter-spacing:0.5px">
+					Partager
+				</a>
+			</div>
+		</div>
+	</div>
+    <div class="page-content" style="text-align:center">
+        <div ng-show="mode!='cashmoney'" class="block-title block-title-medium">{{total}},00</div>
+        <div ng-show="mode=='cashmoney'" style="padding:20px 20px 0 20px;">
+			<table style="width: 100%;">
+				<tr>
+					<td class="color-active" style="width: 33%; text-align: center; padding-bottom: 5px;">
+						A payer
+					</td>
+					<td></td>
+					<td class="color-active" style="width: 33%; text-align: center; padding-bottom: 5px;">
+						Rendu
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 40%; text-align: center;"><!--
+						<h3 class="rendu">{{total}}<span>,00</span></h3>-->
+						<span class="rendu">{{total}}<span>,00</span></span>
+					</td>
+					<td style="text-align:center; color:var(--pos-color);">
+						<i class="f7-icons">arrow_right</i>
+					</td>
+					<td style="width: 40%; text-align: center;"><!--
+						<h3 class="rendu">{{rendu}}<span>,00</span></h3>-->
+						<span class="rendu">{{rendu}}<span>,00</span></span>
+					</td>
+				</tr>
+			</table>
+			<form class="list" id="pos-form-rendu" style="margin:0; padding:0 20px;">
+				<ul>
+					<li>
+						<div class="item-content item-input" style="text-align:left">
+							<div class="item-inner">
+								<div class="item-title item-label">Espèces reçues</div>
+								<div class="item-input-wrap">
+									<input type="number" name="montant" placeholder="Montant" pattern="[0-9]*" ng-model="given" ng-change="computerendu()" id="ditoko" spellcheck="false" autocomplete="off" autocorrect="off"/>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</form>
+		</div>
+        <div class="block block-strong">
+            <p>{{mode}}</p>
+			<div class="pos-btn-list">
+				<a href="/page2/" class="col button button-fill bg-custom" ng-click="pay()">VALIDER</a>
+				<a href="#" class="col button button-outline button-raised bd-custom color-custom">Annuler</a>
+            </div>
+        </div>
+    </div>
+</div>

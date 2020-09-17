@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html lang="fr" ng-app="MyApp">
+    <head>
+        <meta charset="utf-8" />
+        <!--
+		  Customize this policy to fit your own app's needs. For more guidance, see:
+			  https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+		  Some notes:
+			* https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+			* Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+			  * Enable inline JS: add 'unsafe-inline' to default-src
+		-->
+        <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content:" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover" />
+
+        <meta name="theme-color" content="#007aff" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <title>POS Software</title>
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <link rel="apple-touch-icon" href="img/icon.png" />
+        <link rel="icon" href="img/icon.png" />
+
+        <link rel="stylesheet" href="framework7/css/framework7.bundle.min.css" />
+        <link rel="stylesheet" href="css/icons.css" />
+        <link rel="stylesheet" href="css/app.css" />
+		
+        <link rel="preload" href="pages/page1.html" as="html">
+        <link rel="preload" href="pages/page2.html" as="html">
+		
+		<link rel="stylesheet" href="css/media-queries.css">
+        <link rel="stylesheet" href="css/pos-app.css" />
+		
+		<link href="https://fonts.googleapis.com/css2?family=Material+Icons"
+      rel="stylesheet">
+		
+		<meta name="theme-color" content="#2196f3" /><!-- Color theme for statusbar (Android only) -->
+		<meta name="ax-code" content="twUPYLs" /><!-- Axelib Project Code 'add code project via axelib' -->
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
+    </head>
+    <body ng-controller="MainController" ng-init="init()" id="body">
+		
+		<div class="uppon">			
+			<ul class="mili">
+				<li ng-show="code.length>=1"></li>
+				<li ng-show="code.length>=2"></li>
+				<li ng-show="code.length>=3"></li>
+				<li ng-show="code.length>=4"></li>
+			</ul>
+			<div class="tyi">
+				<table>
+					<tr>
+						<td><div>7</div></td>
+						<td><div>8</div></td>
+						<td><div>9</div></td>
+					</tr>
+					<tr>
+						<td><div>4</div></td>
+						<td><div>5</div></td>
+						<td><div>6</div></td>
+					</tr>
+					<tr>
+						<td><div>1</div></td>
+						<td><div>2</div></td>
+						<td><div>3</div></td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td><div>0</div></td>
+						<td>&nbsp;</td>
+					</tr>
+				</table>
+			</div><!--
+			<div class="mnbtn" onclick="document.querySelector('.uppon').style.display = 'none'">Enter</div>-->
+			<div class="mnbtn">Enter</div>
+		</div>
+		
+        <div id="app">
+            <!-- Left panel with cover effect-->
+            <div class="panel panel-left panel-cover theme-dark panel-init">
+                <div class="view">
+                    <div class="page">
+                        <div class="navbar">
+                            <div class="navbar-bg"></div>
+                            <div class="navbar-inner">
+                                <div class="title">Menu</div>
+                            </div>
+                        </div>
+                        <div class="page-content">
+                            <div class="block">Welcome <strong>{{profile.name}}</strong></div>
+							<div class="list links-list" style="margin:8px 0;">
+								<ul>
+									<li>
+										<a href="#view-home" class="tab-link panel-close">Vente</a>
+									</li>
+									<li>
+										<a href="#view-tickets" class="tab-link panel-close">Tickets</a>
+									</li>
+									<li>
+										<a href="#view-catalog" class="tab-link panel-close">Catalogue</a>
+									</li>
+									<li>
+										<a href="#view-clients" class="tab-link panel-close">Clients</a>
+									</li>
+									<li ng-if="profile.type=='admin'">
+										<a href="#view-stats" class="tab-link panel-close">Statistiques</a>
+									</li>
+									<li>
+										<a href="#view-settings" class="tab-link panel-close">Paramètres</a>
+									</li>
+									<li ng-if="profile.type=='admin'">
+										<a href="#" class="tab-link panel-close no-before">Back office</a>
+									</li>
+								</ul>
+							</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right panel with reveal effect-->
+            <div class="panel panel-right panel-reveal theme-dark">
+                <div class="view">
+                    <div class="page" ng-controller="PanierController" ng-init="init()">
+                        
+						<div class="navbar">
+                            <div class="navbar-bg"></div>
+                            <div class="navbar-inner">
+                                <div class="title">Right Panel</div>
+                            </div>
+                        </div>
+						
+                        <div class="page-content">
+							<div class="list media-list panier-list" ng-show="panier.length>0" style="margin-top:0; margin-bottom:0;">
+								<ul>
+									<li ng-repeat="item in panier" ng-click="SetArticle(item)">
+										<a href="#" class="item-link item-content sheet-open" data-sheet=".sheet-price">
+											<div class="item-media"><img ng-src="{{item.image.small}}" width="44" /></div>
+											<div class="item-inner">
+												<div class="item-title-row">
+													<div class="item-title">{{item.name}}</div>
+													<div class="item-after">{{item.quantity*item.price}},00</div>
+												</div>
+												<div class="item-subtitle" style="color:#33CD5F !important; font-weight:bold;">x {{item.quantity}}</div>
+											</div>
+										</a>
+									</li>
+								</ul>
+							</div>
+							<div class="pos-total" ng-show="panier.length>0">
+								<table>
+									<tr>
+										<td class="total-label">TOTAL</td>
+										<td class="total-amount">{{total}},00</td>
+									</tr>
+								</table>
+							</div>
+							
+							<div class="pos-btn-list" ng-show="panier.length>0"><!--
+								<button class="col button button-raised button-fill popup-close bg-custom">Fermer</button>-->
+								<button class="col button button-outline brd-custom clr-custom" ng-click="cancelorder();">Vider panier</button>
+							</div>
+							
+							<div ng-show="panier.length<=0" style="text-align:center;text-align:center;margin-top: 50px;color: #CCC;font-size: 16px;">
+								- Aucun article -
+							</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Views/Tabs container -->
+            <div class="views tabs safe-areas">
+               
+                <!-- Your main view/tab, should have "view-main" class. It also has "tab-active" class -->
+                <div id="view-home" class="view view-main view-init tab tab-active" data-url="/">
+                    <!-- Initial Page, "data-name" contains page name -->
+					<div data-name="home" class="page" ng-controller="IndexPageController" ng-init="init()" id="HomePage">
+						<!-- Top Navbar -->
+						<div class="navbar color-white">
+							<div class="navbar-bg"></div>
+							<div class="navbar-inner">
+								<div class="left">
+									<a href="#" class="link icon-only panel-open">
+										<i class="f7-icons">line_horizontal_3</i>
+									</a>
+								</div><!--
+								<div class="title sliding">Page Title</div>-->
+								<div class="title sliding">Vente Articles</div>
+								<div class="right">
+									<a class="link icon-only sheet-open alternate-user-icon pale" data-sheet=".my-sheet-swipe-to-step" id="alternate-user-icon">
+										<i class="f7-icons">person_crop_circle_badge_plus</i>
+									</a>
+									<a href="#" class="link icon-only popup-open not-on-tablet" data-popup=".popup-cart">
+										<div class="pos-cart">0</div>
+									</a>
+									<a class="link icon-only searchbar-enable not-on-mobile" data-searchbar=".searchbar-demo">
+										<i class="f7-icons">search</i>
+									</a>
+								</div>
+								<form data-search-container=".search-list" class="searchbar searchbar-expandable searchbar-demo searchbar-init pos-searchbar">
+									<div class="searchbar-inner">
+										<div class="searchbar-input-wrap">
+											<input type="search" placeholder="Search" id="globalsearch" spellcheck="false"/>
+											<i class="searchbar-icon"></i>
+											<span class="input-clear-button"></span>
+										</div>
+										<span class="searchbar-disable-button if-not-aurora">Cancel</span>
+									</div>
+								</form>
+							</div>
+						</div>
+						
+						<!-- Scrollable page content -->
+						<div class="page-content" style="">
+							
+							<div style="padding:12px 15px 0px;">
+								<a href="#" class="not-on-tablet">
+									<div class="payeur" ng-click="gopay()">
+										<span class="clr-custom">PAYER</span>
+										<span class="price-py">{{total}},00</span>
+									</div>
+								</a>
+								<div class="not-on-tablet f7-icons glass">search</div>
+								<div class="not-on-tablet f7-icons xmark not-on-tablet" ng-click="emptysearch()">xmark_circle_fill</div>
+								<form>
+									<input type="search" class="searchinput not-on-tablet" ng-model="search" placeholder="Produits ..." spellcheck="false" id="pos-mobile-search" style="text-indent:22px;" autocomplete="off" autocorrect="off"/>
+								</form>
+								<div class="list inline-labels no-hairlines-md not-on-tablet categoritem">
+									<ul>
+										<li class="item-content item-input item-input-with-value">
+											<div class="item-inner">
+												<div class="item-title item-label">Categories</div>
+												<div class="item-input-wrap input-dropdown-wrap">
+													<select placeholder="Please choose..." class="input-with-value" ng-model="TheCategory" ng-change="ChangeCategory()">
+														<option value="Tout">Tout</option>
+														<option ng-repeat="category in categories">{{category.name}}</option>
+													</select>
+												</div>
+											</div>
+										</li>
+									</ul>
+								</div>
+								
+							</div>
+							
+							<div class="pos-category-list not-on-mobile" style="margin:10px 12px;">
+								<div class="currcat ng-hide" ng-show="currentcategory != ''" ng-click="currentcategory=''">
+									{{currentcategory}}
+								</div>
+								<div class="row" ng-show="currentcategory == ''">
+									<div class="col-50 medium-25" ng-repeat="category in categories" ng-click="SetCat(category.name)">
+										<div class="cat">{{category.name}}</div>
+									</div>
+								</div>
+							</div>
+							
+							<div style="text-align:center; padding-top:12px;" ng-show="articles.length<=0">
+								<div class="preloader"></div>
+							</div>
+							
+							<div class="list media-list pos-articles" style="margin-top:12px;">
+								<ul>
+									<li ng-repeat="article in articles | filter:search as filteredItems" ng-click="AddArticle(article)" ng-hold="ShowSheet(article)" ng-show="filtercategory(article)">
+										<a href="#" class="item-link item-content pos-article">
+											<div class="item-media"><img ng-src="{{article.image.small}}" width="44" /></div>
+											<div class="item-inner">
+												<div class="item-title-row">
+													<div class="item-title">{{article.name}}</div>
+													<div class="item-after">{{article.price}},00</div>
+												</div>
+												<div class="item-subtitle">{{article.category_name}}</div>
+											</div>
+										</a>
+									</li>
+								</ul>
+							</div>
+							
+						</div>
+						
+					</div>
+                </div>
+
+                <!-- Tickets View -->
+                <div id="view-tickets" class="view view-init tab view-tickets" data-name="tickets" data-url="/tickets/">
+                    <!-- tickets page will be loaded here dynamically from /tickets/ route -->
+                </div>
+				
+                <!-- Catalog View -->
+                <div id="view-catalog" class="view view-init tab view-catalog" data-name="catalog" data-url="/catalog/">
+                    <!-- Catalog page will be loaded here dynamically from /catalog/ route -->
+                </div>
+		
+                <!-- clients View -->
+                <div id="view-clients" class="view view-init tab view-clients" data-name="clients" data-url="/clients/">
+                    <!-- clients page will be loaded here dynamically from /clients/ route -->
+                </div>
+				
+                <!-- Stats View -->
+                <div id="view-stats" class="view view-init tab view-stats" data-name="stats" data-url="/stats/">
+                    <!-- stats page will be loaded here dynamically from /stats/ route -->
+                </div>
+				
+                <!-- Settings View -->
+                <div id="view-settings" class="view view-init tab view-settings" data-name="settings" data-url="/settings/">
+                    <!-- Settings page will be loaded here dynamically from /settings/ route -->
+                </div>
+				
+				<!-- MOBILE BASKET -->
+				<div class="popup popup-cart">
+					<div class="view">
+						
+						<div class="page" id="PanierPage" ng-controller="PanierController" ng-init="init()">
+							<div class="navbar color-white bg-custom">
+								<div class="navbar-bg"></div>
+								<div class="navbar-inner">
+									<div class="title">Dans le panier</div>
+									<div class="right"><!--
+										<a class="link icon-only sheet-open" data-sheet=".my-sheet-swipe-to-step" id="alternate-user-icon">
+											<i class="f7-icons">person_crop_circle_badge_plus</i>
+										</a>-->
+										<a class="link popup-close">Fermer</a><!--
+										<a class="link popup-close">
+											<i class="material-icons">clear</i>
+										</a>-->
+									</div>
+								</div>
+							</div>
+							<div class="page-content"><!-- Subnavbar -->
+								<!--... {{panier.length}}-->
+								<div class="list media-list panier-list" ng-show="panier.length>0" style="margin-top:0; margin-bottom: 0;">
+									<ul>
+										<li ng-repeat="item in panier" ng-click="SetArticle(item)">
+											<a href="#" class="item-link item-content sheet-open" data-sheet=".sheet-price">
+												<div class="item-media"><img ng-src="{{item.image.small}}" width="44" /></div>
+												<div class="item-inner">
+													<div class="item-title-row">
+														<div class="item-title">{{item.name}}</div>
+														<div class="item-after">{{item.quantity*item.price}},00</div>
+													</div>
+													<div class="item-subtitle">x {{item.quantity}}</div>
+												</div>
+											</a>
+										</li>
+									</ul>
+								</div>
+								<div class="pos-total" ng-show="panier.length>0">
+									<table>
+										<tr>
+											<td class="total-label">TOTAL</td>
+											<td class="total-amount">{{total}},00</td>
+										</tr>
+									</table>
+								</div>
+								
+								<div class="pos-btn-list" ng-show="panier.length>0"><!--
+									<button class="col button button-raised button-fill popup-close bg-custom">Fermer</button>-->
+									<button class="button col" ng-click="cancelorder();" style="color:var(--pos-color); background-color:var(--pos-efflur-color);">Vider panier</button><!--
+									<button class="col button button-outline brd-custom clr-custom" ng-click="cancelorder();">Annuler la vente</button>-->
+								</div>
+								
+								<div ng-show="panier.length<=0" style="text-align:center;text-align:center;margin-top: 50px;color: #CCC;font-size: 16px;">
+									<img src="img/tracker-no-order.svg" style="width:50%; margin:0 auto; display:block;"/>
+									<br>
+									Aucun article
+								</div>
+							</div>
+							<div class="toolbar tabbar toolbar-bottom"><!-- style="height:60px;">-->
+								<div class="toolbar-inner" style="padding:15px 30px 17px 30px; border:solid 0px red;">
+									<button class="col button button-raised button-fill popup-close bg-custom" ng-click="pay()">Payer</button>
+								</div>
+							</div>
+						</div>
+						
+						
+					</div>
+				</div>
+				
+				
+				<!-- Popup Article -->
+				<div class="popup popup-article" id="my-popup">
+					<div class="view">
+						<div class="page">
+							<div class="navbar">
+								<div class="navbar-bg"></div>
+								<div class="navbar-inner">
+									<div class="title">Article</div>
+									<div class="right color-white">
+										<a href="#" class="link popup-close">Fermer</a>
+									</div>
+								</div>
+							</div>
+							<div class="page-content">
+								<img src="" id="pos-article-img" style="width:100%"/>
+								<div class="block" style="margin-top:10px; padding-bottom:50px;">
+									<div class="pos-article-name">
+										<span>Nom article</span>
+									</div>
+									<div class="pos-article-price">
+										<span>0,00</span>
+									</div>
+									<ul class="list-cat">
+										<li>Super</li>
+										<li>Top</li>
+										<li>Je kiffe</li>
+									</ul>
+									<p class="pos-article-description">Article description</p>
+									<button class="col button button-raised button-fill popup-close bg-custom" onclick="buyarticle()">Ajouter au panier</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+            </div>
+
+			
+			<div class="sheet-modal my-sheet-swipe-to-step demo-sheet-swipe-to-close sheet-modal-push sheet-search" id="SearchClientPage" ng-controller="SearchClientController">
+				<div class="sheet-modal-inner">
+					<div class="swipe-handler"></div>
+					<div class="page-content">
+						
+						<div class="display-flex padding justify-content-space-between align-items-center">
+							<div style="font-size: 14px; color: var(--pos-color);">Associer un client</div>
+						</div>
+						
+						<div class="f7-icons cxi" ng-click="CleanClient()" ng-show="client!=null">xmark_circle_fill</div>
+						<div class="f7-icons cxu" ng-click="CleanClientText()" ng-show="client==null">xmark_circle_fill</div>
+						
+						<div ng-show="client!=null" class="client-choosed">
+							{{client.firstname}} {{client.lastname}}
+						</div>
+						
+						<div class="searchin" ng-hide="client!=null">
+							<div class="f7-icons glass" style="margin-top:10px">search</div>
+							<input type="search" placeholder="Prénom ou nom du client ..." ng-model="searchClient" id="searchClientInput" spellcheck="false" autocomplete="off" autocorrect="off"/>
+						</div>
+						<div class="list no-hairlines client-results">
+							<ul ng-show="searchClient.length>0">
+								<li class="item-content sheet-close" ng-repeat="item in clients | filter:searchClient | limitTo:5" ng-click="LinkClient(item)">
+									<div class="item-inner">
+										<div class="item-title">{{item.firstname}} {{item.lastname}}</div>
+										<div class="item-after text-color-black"><b>{{item.email?item.email:item.tel}}</b></div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="padding-horizontal padding-bottom">
+							<a href="/client/" class="button button-large button-fill sheet-close" style="background-color:#555;">Ajouter client</a>
+							<div class="margin-top text-align-center">Recherche base clients</div>
+						</div>
+						
+						<!--
+						<div class="block-title block-title-large">Hello!</div>
+						<div class="block">
+							<p>
+								Eaque maiores ducimus, impedit unde culpa qui, explicabo accusamus, non vero corporis voluptatibus similique odit ab. Quaerat quasi consectetur quidem libero? Repudiandae adipisci vel voluptatum, autem libero minus
+								dignissimos repellat.
+							</p>
+							<p>
+								Iusto, est corrupti! Totam minus voluptas natus esse possimus nobis, delectus veniam expedita sapiente ut cum reprehenderit aliquid odio amet praesentium vero temporibus obcaecati beatae aspernatur incidunt, perferendis
+								voluptates doloribus?
+							</p>
+						</div>-->
+					</div>
+				</div>
+			</div>
+			
+
+			
+			
+			<!-- Swipe to step sheet --
+			<div class="sheet-modal my-sheet-swipe-to-step sheet-search" id="SearchClientPage">
+				<div class="sheet-modal-inner">
+					<div class="swipe-handler"></div>
+					<div class="sheet-modal-swipe-step">
+						<div class="display-flex padding justify-content-space-between align-items-center">
+							<div style="font-size: 14px; color: var(--pos-color);">Associer un client</div>
+						</div>
+						
+						<div class="f7-icons cxi" ng-click="CleanClient()" ng-show="client!=null">xmark_circle_fill</div>
+						<div class="f7-icons cxu" ng-click="CleanClientText()" ng-show="client==null">xmark_circle_fill</div>
+						
+						<div ng-show="client!=null" class="client-choosed">
+							{{client.firstname}} {{client.lastname}}
+						</div>
+						
+						<div class="searchin" ng-hide="client!=null">
+							<div class="f7-icons glass" style="margin-top:10px">search</div>
+							<input type="search" placeholder="Prénom ou nom du client ..." ng-model="searchClient" id="searchClientInput" spellcheck="false" autocomplete="off" autocorrect="off"/>
+						</div>
+						<div class="list no-hairlines client-results">
+							<ul ng-show="searchClient.length>0">
+								<li class="item-content sheet-close" ng-repeat="item in clients | filter:searchClient | limitTo:3" ng-click="LinkClient(item)">
+									<div class="item-inner">
+										<div class="item-title">{{item.firstname}} {{item.lastname}}</div>
+										<div class="item-after text-color-black"><b>{{item.email?item.email:item.tel}}</b></div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="padding-horizontal padding-bottom">
+							<a href="/client/" class="button button-large button-fill sheet-close" style="background-color:#555;">Ajouter client</a>
+							<div class="margin-top text-align-center">Recherche base clients</div>
+						</div>
+					</div>
+				</div>
+			</div>-->
+
+			
+			<!-- Swipe to step sheet -->
+			<div class="sheet-modal sheet-price" style="height:auto; --f7-sheet-bg-color:#fff;">
+				<div class="sheet-modal-inner">
+					<div class="sheet-modal-swipe-step">
+						
+						<div class="display-flex padding justify-content-space-between align-items-center">
+							<div style="font-size: 18px;" id="sheet-price-article">Nom article</div>
+							<div style="font-size: 22px;"><b id="sheet-price-price">0,00</b></div>
+						</div>
+						
+						<div style="text-align:center; padding:3px 0 15px 0;">
+							<div class="stepper stepper-init">
+								<div class="stepper-button-minus"></div>
+								<div class="stepper-input-wrap">
+									<input type="text" value="0" min="0" max="100" step="1" readonly style="width:60px; font-weight:bolder;"/>
+								</div>
+								<div class="stepper-button-plus"></div>
+							</div>
+						</div>
+						
+						<div class="padding-horizontal padding-bottom">
+							<a class="button button-large button-fill sheet-close pos-valid-count" style="background-color:#555;">Valider</a>
+							<div class="margin-top text-align-center">&nbsp;</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			
+
+            <!-- Login Screen -->
+            <div class="login-screen" id="my-login-screen">
+                <div class="view">
+                    <div class="page">
+                        <div class="page-content login-screen-content">
+                            <div class="login-screen-title">Login</div>
+                            <div class="list">
+                                <ul>
+                                    <li class="item-content item-input">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">Username</div>
+                                            <div class="item-input-wrap">
+                                                <input type="text" name="username" placeholder="Your username" />
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="item-content item-input">
+                                        <div class="item-inner">
+                                            <div class="item-title item-label">Password</div>
+                                            <div class="item-input-wrap">
+                                                <input type="password" name="password" placeholder="Your password" />
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="list">
+                                <ul>
+                                    <li>
+                                        <a href="#" class="item-link list-button login-button">Sign In</a>
+                                    </li>
+                                </ul>
+                                <div class="block-footer">
+                                    Some text about login information.<br />
+                                    Click "Sign In" to close Login Screen
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Framework7 library -->
+        <script src="framework7/js/framework7.bundle.min.js"></script>
+
+		<script src="https://ajax.axelib.io/libs/0.0.1/axelib.js"></script>
+
+        <!-- App routes -->
+        <script src="js/routes.js"></script>
+        <!-- App scripts -->
+        <script src="js/app.js"></script>
+        <script src="js/data.js"></script>
+		
+		<script type="text/javascript" src="js/service/InitService.js"></script>
+		<script type="text/javascript" src="js/service/AxelibService.js"></script>
+		<script type="text/javascript" src="js/controller/MainController.js"></script>
+		<script type="text/javascript" src="js/controller/IndexPageController.js"></script>
+		<script type="text/javascript" src="js/controller/PaiementModeController.js"></script>
+		<script type="text/javascript" src="js/controller/SearchClientController.js"></script>
+		<script type="text/javascript" src="js/controller/ValidationController.js"></script>
+		<script type="text/javascript" src="js/controller/PanierController.js"></script>
+        <script src="cordova.js"></script><!--
+        <script src="js/index.js"></script>-->
+    </body>
+</html>

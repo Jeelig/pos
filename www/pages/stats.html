@@ -1,0 +1,64 @@
+<template>
+    <div class="page" data-name="stats">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding color-white">
+				<div class="left">
+					<a href="#" class="link icon-only panel-open">
+						<i class="f7-icons">line_horizontal_3</i>
+					</a>
+				</div>
+                <div class="title">Statistiques</div>
+            </div>
+        </div>
+        <div class="page-content">
+			
+			<div class="list list-stats">
+				<ul>
+					<li>
+						<a href="/page1/">
+							<div class="item-content">
+								<div class="item-media"><span class="material-icons">shopping_basket</span></div>
+								<div class="item-inner">
+									<div class="item-title">Panier moyen</div>
+									<div class="item-after">CEO</div>
+								</div>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="/page1/">
+							<div class="item-content">
+								<div class="item-media"><i class="material-icons">insert_chart_outlined</i></div>
+								<div class="item-inner">
+									<div class="item-title">Graphiques par point de vente</div>
+								</div>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a href="/page1/">
+							<div class="item-content">
+								<div class="item-media"><span class="material-icons">history</span></div>
+								<div class="item-inner">
+									<div class="item-title">Historique des ventes</div>
+									<div class="item-after"><span class="badge">5</span></div>
+								</div>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+			
+        </div>
+    </div>
+</template>
+<script>
+    return {
+        data: function () {
+            return {
+                products: this.$root.products,
+            };
+        },
+    };
+</script>

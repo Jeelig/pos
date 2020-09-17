@@ -1,0 +1,106 @@
+<template>
+    <div class="page" data-name="clients">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding color-white">
+				<div class="left">
+					<a href="#" class="link icon-only panel-open">
+						<i class="f7-icons">line_horizontal_3</i>
+					</a>
+				</div>
+                <div class="title">Clients</div>
+				<div class="right">
+					<a href="/client/" class="link icon-only">
+						<span class="material-icons">person_add_alt_1</span>
+					</a>
+				</div>
+            </div>
+        </div>
+        <div class="page-content">
+			
+			<div class="sisearch">
+				<div class="f7-icons glass">search</div>
+				<div class="f7-icons ymark" @click="emptysearch()">xmark_circle_fill</div>
+				<input type="search" placeholder="Recherche ..." id="client-search" spellcheck="false" autocomplete="off" autocorrect="off"/>
+			</div>
+			
+			<div class="list media-list list-clients" style="margin-top:0;">
+				<ul id="myUL2">
+                    {{#each clients}}
+					<li>
+						<a href="/client/{{id}}/">
+							<div class="item-content">
+								<div class="item-media">
+									<i class="icon f7-icons" style="font-size:40px">person_circle_fill</i>
+								</div>
+								<div class="item-inner">
+									<div class="item-title-row">
+										<div class="item-title">{{firstname}} {{lastname}}</div>
+									</div>
+									<div class="item-subtitle">
+										{{#if email}}
+											{{email}}
+										{{else}}
+											{{tel}}
+										{{/if}}
+									</div>
+								</div>
+							</div>
+						</a>
+					</li>
+                    {{/each}}
+				</ul>
+			</div>
+			
+        </div>
+    </div>
+</template>
+
+<script>
+    return {
+		on: {
+			pageInit: function() {
+				var self = this;
+				$$("#client-search").on('keyup', function (e) {
+					self.filterInput();
+				});
+			},
+			// each object key means same name event handler
+			pageTabShow: function() {
+				//this.$setState({
+				//	articles: global.articles,
+				//});
+			}
+		},
+		methods: {
+			emptysearch: function() {
+				document.getElementById("client-search").value = "";
+				this.filterInput();
+			},
+			filterInput: function() {
+				// Declare variables
+				var input, filter, ul, li, a, i, txtValue;
+				input = document.getElementById("client-search");
+				filter = input.value.toUpperCase();
+				ul = document.getElementById("myUL2");
+				li = ul.getElementsByTagName("li");
+				// Loop through all list items, and hide those who don't match the search query
+				for (i = 0; i < li.length; i++) {
+					a = li[i].getElementsByTagName("a")[0];
+					txtValue = a.textContent || a.innerText;
+					if (txtValue.toUpperCase().indexOf(filter) > -1) {
+						li[i].style.display = "";
+					} else {
+						li[i].style.display = "none";
+					}
+				}
+			}
+		},
+        data: function () {
+            return {
+                products: this.$root.products,
+                clients: this.$root.clients,
+            };
+        },
+    };
+</script>
